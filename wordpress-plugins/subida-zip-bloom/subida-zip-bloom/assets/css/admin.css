@@ -1,0 +1,609 @@
+/* ============================================================
+   BloomScans — Subida ZIP Bloom v3.5
+   Admin Panel Styles
+   ============================================================ */
+
+:root {
+    --bloom-primary:    #7c3aed;
+    --bloom-primary-h:  #6d28d9;
+    --bloom-primary-l:  #ede9fe;
+    --bloom-success:    #059669;
+    --bloom-success-l:  #d1fae5;
+    --bloom-warning:    #d97706;
+    --bloom-warning-l:  #fef3c7;
+    --bloom-danger:     #dc2626;
+    --bloom-danger-l:   #fee2e2;
+    --bloom-info:       #0284c7;
+    --bloom-info-l:     #e0f2fe;
+    --bloom-gray-50:    #f8fafc;
+    --bloom-gray-100:   #f1f5f9;
+    --bloom-gray-200:   #e2e8f0;
+    --bloom-gray-300:   #cbd5e1;
+    --bloom-gray-400:   #94a3b8;
+    --bloom-gray-500:   #64748b;
+    --bloom-gray-700:   #334155;
+    --bloom-gray-900:   #0f172a;
+    --bloom-radius:     8px;
+    --bloom-shadow:     0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+    --bloom-shadow-md:  0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+.mcm-manager-v3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 900px;
+}
+
+/* ── Notices ─────────────────────────────────────────────── */
+.mcm-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--bloom-radius);
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.mcm-notice .dashicons { flex-shrink: 0; font-size: 20px; width: 20px; height: 20px; margin-top: 1px; }
+.mcm-notice strong { display: block; margin-bottom: 4px; }
+.mcm-notice code {
+    background: rgba(0,0,0,.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.mcm-notice-warning {
+    background: var(--bloom-warning-l);
+    border: 1px solid #fcd34d;
+    color: #78350f;
+}
+.mcm-notice-warning .dashicons { color: var(--bloom-warning); }
+
+.mcm-notice-info {
+    background: var(--bloom-info-l);
+    border: 1px solid #7dd3fc;
+    color: #0c4a6e;
+}
+.mcm-notice-info .dashicons { color: var(--bloom-info); }
+
+/* ── Collapsible sections ────────────────────────────────── */
+.mcm-collapsible-section {
+    background: #fff;
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+    margin-bottom: 12px;
+    box-shadow: var(--bloom-shadow);
+    overflow: hidden;
+}
+
+.mcm-section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bloom-gray-700);
+    background: var(--bloom-gray-50);
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+    border-bottom: 1px solid transparent;
+}
+.mcm-section-toggle:hover {
+    background: var(--bloom-gray-100);
+}
+.mcm-collapsible-section:has(.mcm-section-content:not([style*="display: none"])) .mcm-section-toggle {
+    border-bottom-color: var(--bloom-gray-200);
+}
+
+.mcm-section-toggle .dashicons-arrow-right-alt2 {
+    color: var(--bloom-gray-400);
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    transition: transform .25s ease;
+    flex-shrink: 0;
+}
+.mcm-section-toggle .dashicons-arrow-right-alt2.mcm-rotated {
+    transform: rotate(90deg);
+}
+.mcm-section-toggle > .dashicons:not(.dashicons-arrow-right-alt2) {
+    color: var(--bloom-primary);
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.mcm-section-content {
+    padding: 20px;
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.mcm-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    line-height: 1.6;
+}
+.mcm-badge-success { background: var(--bloom-success-l); color: #065f46; }
+.mcm-badge-warning { background: var(--bloom-warning-l); color: #78350f; }
+.mcm-badge-info    { background: var(--bloom-info-l);    color: #0c4a6e; }
+.mcm-badge-manual  { background: #f3e8ff;                color: #581c87; }
+
+/* ── Categories ──────────────────────────────────────────── */
+.mcm-category-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 4px;
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+    padding: 12px;
+    background: var(--bloom-gray-50);
+    margin-bottom: 12px;
+}
+.mcm-category-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--bloom-gray-700);
+    transition: background .1s;
+}
+.mcm-category-list label:hover { background: #fff; }
+.mcm-category-list input[type="checkbox"] { cursor: pointer; }
+.mcm-category-list small { color: var(--bloom-gray-400); font-size: 11px; }
+.mcm-auto-save-hint { font-size: 11px; color: var(--bloom-gray-400); margin-top: 8px; }
+
+/* ── Upload Area ─────────────────────────────────────────── */
+.mcm-upload-area {
+    position: relative;
+    border: 2px dashed var(--bloom-gray-300);
+    border-radius: var(--bloom-radius);
+    padding: 32px 20px;
+    text-align: center;
+    background: var(--bloom-gray-50);
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    margin-bottom: 14px;
+}
+.mcm-upload-area:hover,
+.mcm-upload-area.dragover {
+    border-color: var(--bloom-primary);
+    background: var(--bloom-primary-l);
+}
+.mcm-upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+.mcm-upload-icon {
+    font-size: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+    color: var(--bloom-gray-400);
+    display: block;
+    margin: 0 auto 10px;
+}
+.mcm-upload-area p {
+    margin: 0;
+    color: var(--bloom-gray-500);
+    font-size: 13px;
+}
+
+.mcm-selected-file,
+.mcm-selected-files-list {
+    background: var(--bloom-primary-l);
+    border: 1px solid #c4b5fd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #4c1d95;
+    margin-bottom: 12px;
+}
+.mcm-selected-files-list .mcm-file-chip {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #c4b5fd;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin: 3px 4px 3px 0;
+    font-size: 12px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.mcm-btn-upload {
+    background: var(--bloom-primary) !important;
+    border-color: var(--bloom-primary) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 6px 16px !important;
+    font-weight: 600 !important;
+}
+.mcm-btn-upload:hover {
+    background: var(--bloom-primary-h) !important;
+    border-color: var(--bloom-primary-h) !important;
+}
+.button .dashicons {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+#rename-manga-folder {
+    flex-shrink: 0;
+    white-space: nowrap;
+    align-self: center;
+}
+
+/* ── Progress ────────────────────────────────────────────── */
+.mcm-progress-container {
+    margin: 16px 0;
+    padding: 16px;
+    background: var(--bloom-gray-50);
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+}
+.mcm-progress-bar {
+    height: 10px;
+    background: var(--bloom-gray-200);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.mcm-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bloom-primary), #a855f7);
+    width: 0%;
+    transition: width .3s ease;
+    border-radius: 99px;
+    position: relative;
+    overflow: hidden;
+}
+.mcm-progress-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+    animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.mcm-progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 13px;
+}
+.mcm-progress-text { color: var(--bloom-gray-700); font-weight: 500; }
+.mcm-progress-percentage { font-weight: 700; color: var(--bloom-primary); font-size: 15px; }
+.mcm-progress-details {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--bloom-gray-500);
+    line-height: 1.7;
+}
+
+.mcm-progress-simple {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 12px;
+    background: var(--bloom-gray-50);
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+}
+.mcm-spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid var(--bloom-gray-200);
+    border-top-color: var(--bloom-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.mcm-progress-text-simple { font-size: 13px; color: var(--bloom-gray-700); font-weight: 500; }
+
+/* ── Messages ────────────────────────────────────────────── */
+.mcm-message {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: var(--bloom-radius);
+    font-size: 13px;
+    line-height: 1.5;
+}
+.mcm-message.success {
+    background: var(--bloom-success-l);
+    border: 1px solid #6ee7b7;
+    color: #064e3b;
+}
+.mcm-message.error {
+    background: var(--bloom-danger-l);
+    border: 1px solid #fca5a5;
+    color: #7f1d1d;
+}
+.mcm-message.show { display: block; }
+
+/* ── Chapter list ────────────────────────────────────────── */
+.mcm-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.mcm-actions { display: flex; gap: 8px; }
+
+.mcm-chapters-list {
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+    overflow: hidden;
+    background: var(--bloom-gray-50);
+}
+.mcm-empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--bloom-gray-400);
+}
+.mcm-empty .dashicons {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    opacity: .4;
+    display: block;
+    margin: 0 auto 10px;
+}
+.mcm-empty p { margin: 0; font-size: 14px; }
+
+/* ── Chapter item ────────────────────────────────────────── */
+.mcm-chapter-item {
+    background: #fff;
+    border-bottom: 1px solid var(--bloom-gray-200);
+    position: relative;
+    transition: background .15s;
+}
+.mcm-chapter-item:last-child { border-bottom: none; }
+.mcm-chapter-item:hover { background: var(--bloom-gray-50); }
+.mcm-chapter-item.ui-sortable-helper {
+    box-shadow: var(--bloom-shadow-md);
+    opacity: .9;
+    z-index: 999;
+}
+
+.mcm-drag-handle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 32px;
+    background: var(--bloom-gray-100);
+    border-right: 1px solid var(--bloom-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+    transition: background .15s;
+}
+.mcm-drag-handle:hover { background: var(--bloom-gray-200); }
+.mcm-drag-handle .dashicons { color: var(--bloom-gray-400); font-size: 18px; }
+
+.mcm-chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px 12px 46px;
+}
+.mcm-chapter-info h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bloom-gray-900);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.mcm-meta {
+    font-size: 12px;
+    color: var(--bloom-gray-400);
+}
+.mcm-meta a {
+    color: var(--bloom-primary);
+    text-decoration: none;
+}
+.mcm-meta a:hover { text-decoration: underline; }
+
+.mcm-chapter-actions { display: flex; gap: 6px; align-items: center; }
+
+/* ── Image grid ──────────────────────────────────────────── */
+.mcm-chapter-images {
+    padding: 0 14px 14px 46px;
+    background: var(--bloom-gray-50);
+}
+.mcm-images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--bloom-gray-200);
+    border-radius: var(--bloom-radius);
+}
+.mcm-image-item {
+    position: relative;
+    border: 2px solid var(--bloom-gray-200);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: move;
+    background: #fff;
+    transition: border-color .15s;
+}
+.mcm-image-item:hover { border-color: var(--bloom-primary); }
+.mcm-image-drag {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    padding: 3px;
+    border-radius: 4px;
+    cursor: move;
+    z-index: 10;
+}
+.mcm-image-drag .dashicons { font-size: 12px; width: 12px; height: 12px; }
+.mcm-image-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    transition: transform .2s;
+}
+.mcm-image-thumbnail:hover { transform: scale(1.04); }
+.mcm-image-number {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.mcm-view-full-image {
+    position: absolute;
+    bottom: 5px;
+    right: 32px;
+    background: rgba(124,58,237,.9);
+    color: #fff;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s;
+}
+.mcm-image-item:hover .mcm-view-full-image { opacity: 1; }
+.mcm-delete-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(220,38,38,.9);
+    color: #fff;
+    border: none;
+    padding: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s;
+}
+.mcm-image-item:hover .mcm-delete-image { opacity: 1; }
+.mcm-delete-image .dashicons,
+.mcm-view-full-image .dashicons { font-size: 13px; width: 13px; height: 13px; }
+
+.sortable-images .ui-sortable-placeholder {
+    border: 2px dashed var(--bloom-primary) !important;
+    background: var(--bloom-primary-l) !important;
+    visibility: visible !important;
+    border-radius: 6px;
+}
+
+/* ── Modal ───────────────────────────────────────────────── */
+.mcm-image-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mcm-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.92);
+}
+.mcm-modal-content {
+    position: relative;
+    max-width: 92%;
+    max-height: 92%;
+    z-index: 1;
+}
+.mcm-full-image {
+    max-width: 100%;
+    max-height: 90vh;
+    display: block;
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(0,0,0,.6);
+}
+.mcm-modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: rgba(255,255,255,.92);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .15s;
+}
+.mcm-modal-close:hover { background: #fff; }
+.mcm-modal-close .dashicons { font-size: 18px; width: 18px; height: 18px; }
+
+/* ── description override ────────────────────────────────── */
+.mcm-section-content .description {
+    font-size: 13px;
+    color: var(--bloom-gray-500);
+    margin-bottom: 14px;
+    line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 782px) {
+    .mcm-section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .mcm-chapter-header { flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 46px; }
+    .mcm-images-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+    .mcm-notice { flex-wrap: wrap; }
+    .mcm-category-list { grid-template-columns: 1fr; }
+}
+
+/* ── Upload controls row ─────────────────────────────────── */
+.mcm-upload-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.mcm-upload-hint {
+    font-size: 12px !important;
+    color: var(--bloom-gray-400);
+    margin: 4px 0 0 !important;
+}
+
+/* ── Spin animation for upload button ────────────────────── */
+.mcm-spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}

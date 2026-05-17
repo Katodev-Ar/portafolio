@@ -1,0 +1,97 @@
+/* Bloom Cookie Manager — Cookie Policy Table v1.4.0 */
+.bcm-cookie-policy { font-family: inherit; margin: 1.5em 0; }
+
+.bcm-policy-section { margin-bottom: 2em; }
+
+.bcm-policy-heading {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0 0 .4em;
+    padding-bottom: .3em;
+    border-bottom: 2px solid #e5e7eb;
+    color: inherit;
+}
+
+.bcm-policy-desc {
+    font-size: .9em;
+    color: #6b7280;
+    margin: 0 0 .8em;
+    line-height: 1.5;
+}
+
+.bcm-policy-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.bcm-policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875em;
+    line-height: 1.5;
+}
+.bcm-policy-table thead th {
+    text-align: left;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+}
+.bcm-policy-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    vertical-align: top;
+}
+.bcm-policy-table tbody tr:last-child td { border-bottom: none; }
+.bcm-policy-table tbody tr:hover td { background: #fafafa; }
+.bcm-policy-table code {
+    background: #f3f4f6;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: .9em;
+    color: #374151;
+    word-break: break-all;
+}
+
+.bcm-policy-type {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 99px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-size: .8em;
+    font-weight: 500;
+}
+
+.bcm-policy-empty {
+    font-size: .875em;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 0;
+}
+
+.bcm-policy-updated {
+    font-size: .8em;
+    color: #9ca3af;
+    margin-top: 2em;
+    text-align: right;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .bcm-policy-heading   { border-bottom-color: #374151; }
+    .bcm-policy-desc      { color: #9ca3af; }
+    .bcm-policy-table thead th { background: #1f2937; color: #d1d5db; border-bottom-color: #374151; }
+    .bcm-policy-table tbody td { color: #d1d5db; border-bottom-color: #1f2937; }
+    .bcm-policy-table tbody tr:hover td { background: #111827; }
+    .bcm-policy-table code { background: #374151; color: #d1d5db; }
+    .bcm-policy-type       { background: #1e1b4b; color: #a5b4fc; }
+    .bcm-policy-updated    { color: #6b7280; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .bcm-policy-table { font-size: .8em; }
+    .bcm-policy-table thead th,
+    .bcm-policy-table tbody td { padding: 6px 8px; }
+}

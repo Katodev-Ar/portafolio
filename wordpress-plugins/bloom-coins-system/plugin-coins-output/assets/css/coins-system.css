@@ -1,0 +1,309 @@
+/**
+ * Estilos del Sistema de Monedas
+ * Manga Scan Groups - Coins System
+ */
+
+/* Mensaje de capítulo bloqueado */
+.msg-chapter-locked {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 50px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+}
+
+.msg-lock-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+    animation: msgLockPulse 2s ease-in-out infinite;
+}
+
+@keyframes msgLockPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.msg-chapter-locked h2 {
+    margin: 0 0 15px 0;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.msg-chapter-locked p {
+    margin: 0 0 30px 0;
+    font-size: 18px;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+.msg-balance-info {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.msg-balance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.msg-user-balance {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.msg-unlock-btn {
+    display: inline-block;
+    padding: 18px 40px;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.msg-unlock-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+.msg-unlock-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.msg-unlock-info {
+    margin: 15px 0 0 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.msg-insufficient-balance {
+    background: rgba(255, 193, 7, 0.2);
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.msg-insufficient-balance p {
+    margin: 5px 0;
+}
+
+.msg-buy-coins-btn {
+    display: inline-block;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+    margin-top: 15px;
+}
+
+.msg-buy-coins-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(255, 193, 7, 0.6);
+}
+
+/* Widget de saldo del usuario */
+.msg-user-wallet {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px 30px;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    max-width: 400px;
+    margin: 20px 0;
+}
+
+.msg-wallet-icon {
+    font-size: 36px;
+}
+
+.msg-wallet-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.msg-wallet-label {
+    font-size: 14px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.msg-wallet-balance {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.msg-wallet-btn {
+    padding: 10px 20px;
+    background: white;
+    color: #667eea;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.msg-wallet-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .msg-chapter-locked {
+        padding: 40px 20px;
+        margin: 30px 20px;
+    }
+    
+    .msg-lock-icon {
+        font-size: 56px;
+    }
+    
+    .msg-chapter-locked h2 {
+        font-size: 24px;
+    }
+    
+    .msg-chapter-locked p {
+        font-size: 16px;
+    }
+    
+    .msg-unlock-btn,
+    .msg-buy-coins-btn {
+        padding: 15px 30px;
+        font-size: 16px;
+    }
+    
+    .msg-user-wallet {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .msg-balance-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Animaciones */
+@keyframes msgFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.msg-chapter-locked,
+.msg-user-wallet {
+    animation: msgFadeIn 0.5s ease-out;
+}
+
+/* Estados de carga */
+.msg-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.msg-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: msgSpin 0.8s linear infinite;
+}
+
+@keyframes msgSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Notificación toast */
+.msg-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #28a745;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 999999;
+    animation: msgSlideIn 0.3s ease-out;
+}
+
+.msg-toast.msg-error {
+    background: #dc3545;
+}
+
+@keyframes msgSlideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ── Feature 3: Coin badge + timer in chapter list ───────────────── */
+.msg-coin-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75em;
+    vertical-align: middle;
+    margin-left: 4px;
+    opacity: 0.9;
+    cursor: help;
+}
+.msg-coin-timer {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.65em;
+    background: rgba(255, 193, 7, 0.2);
+    color: #e6a800;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    border-radius: 10px;
+    padding: 1px 5px;
+    margin-left: 3px;
+    vertical-align: middle;
+    font-weight: 600;
+    cursor: help;
+}

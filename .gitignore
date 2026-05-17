@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+vendor/
+venv/
+__pycache__/
+*.pyc
+
+# Credentials & Secrets
+.env
+credentials.json
+token.json
+sa.json
+*.pem
+*.key
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Compiled binaries
+*.exe
+*.dll
+*.so
+
+# Archives (upload source code, not zips)
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+build/

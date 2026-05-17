@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>VideoSnatch</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0f; --sur:#111118; --sur2:#16161f; --sur3:#1e1e2a;
+  --bdr:#252530; --acc:#00e5ff; --acc2:#7c4dff;
+  --glow:rgba(0,229,255,0.1); --txt:#e0e0ee; --dim:#5a5a72;
+  --ok:#00e676; --warn:#ffab40; --err:#ff5252;
+  --yt:#ff0000; --yt2:#ff4444;
+  --mono:'Space Mono',monospace; --sans:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:420px;min-height:560px;background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:13px;overflow-x:hidden}
+.hdr{background:var(--sur);border-bottom:1px solid var(--bdr);padding:13px 16px 11px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-40px;left:-30px;width:150px;height:150px;background:radial-gradient(circle,var(--glow) 0%,transparent 70%);pointer-events:none}
+.hdr-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.logo{width:28px;height:28px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.appname{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.08em}
+.appsub{font-size:9px;color:var(--dim);font-family:var(--mono)}
+.scan-btn{margin-left:auto;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#000;border:none;border-radius:7px;padding:6px 13px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
+.scan-btn:hover{opacity:.85;transform:translateY(-1px)}
+.scan-btn.spin{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sbar{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--dim);font-family:var(--mono)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--dim);transition:all .3s}
+.dot.on{background:var(--ok);box-shadow:0 0 7px var(--ok)}
+.dot.busy{background:var(--acc);box-shadow:0 0 7px var(--acc);animation:blink .7s infinite}
+.dot.err{background:var(--err);box-shadow:0 0 7px var(--err)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.tabs{display:flex;gap:2px;padding:11px 16px 0}
+.tab{flex:1;background:none;border:1px solid var(--bdr);border-bottom:none;border-radius:6px 6px 0 0;padding:7px 4px;color:var(--dim);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .2s;text-align:center}
+.tab.active{background:var(--sur);color:var(--acc)}
+.tab[data-tab="youtube"].active{color:var(--yt)}
+.tab:hover:not(.active){color:var(--txt)}
+.content{background:var(--sur);border:1px solid var(--bdr);border-top:none;margin:0 16px;border-radius:0 0 10px 10px;min-height:230px;max-height:330px;overflow-y:auto}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:38px 20px;color:var(--dim);text-align:center;gap:9px}
+.ei{font-size:28px;opacity:.3}
+.et{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em}
+.es{font-size:11px;opacity:.6;line-height:1.5}
+.vcard{border-bottom:1px solid var(--bdr);padding:0}
+.vcard:last-child{border-bottom:none}
+.card-hdr{display:flex;align-items:stretch;cursor:pointer;transition:background .15s;padding:10px 12px;gap:10px}
+.card-hdr:hover{background:rgba(255,255,255,0.025)}
+.thumb-wrap{position:relative;width:80px;height:52px;flex-shrink:0;border-radius:6px;overflow:hidden;background:var(--sur3);border:1px solid var(--bdr)}
+.thumb-wrap video,.thumb-wrap img{width:100%;height:100%;object-fit:cover}
+.thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--dim)}
+.quality-badge{position:absolute;bottom:3px;right:3px;background:rgba(0,0,0,.75);color:#fff;font-family:var(--mono);font-size:7px;font-weight:700;padding:1px 4px;border-radius:3px;letter-spacing:.04em}
+.preview-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.6);border:none;border-radius:50%;width:22px;height:22px;color:var(--acc);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;opacity:0}
+.card-hdr:hover .preview-btn{opacity:1}
+.preview-btn:hover{background:rgba(0,229,255,.2)}
+.cinfo{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.crow1{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.csource{font-family:var(--mono);font-size:8px;color:var(--acc);letter-spacing:.1em}
+.csize{font-family:var(--mono);font-size:8px;color:var(--dim);margin-left:auto;white-space:nowrap}
+.curl{font-family:var(--mono);font-size:8px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;margin-bottom:4px}
+.cbadges{display:flex;gap:3px;flex-wrap:wrap}
+.badge{display:inline-block;border:1px solid var(--bdr);border-radius:3px;padding:1px 4px;font-family:var(--mono);font-size:7px;color:var(--dim)}
+.badge.mp4{border-color:#ff5252;color:#ff5252}
+.badge.m3u8,.badge.hls{border-color:var(--warn);color:var(--warn)}
+.badge.webm{border-color:var(--acc2);color:var(--acc2)}
+.badge.ok{border-color:var(--ok);color:var(--ok)}
+.preview-panel{display:none;background:var(--sur2);border-top:1px solid var(--bdr);padding:10px 12px}
+.preview-panel.open{display:block}
+.preview-video{width:100%;max-height:130px;border-radius:6px;background:#000;display:block}
+.preview-error{font-family:var(--mono);font-size:9px;color:var(--warn);padding:4px 0}
+.cactions{display:flex;gap:5px;padding:0 12px 10px}
+.btn-dl{flex:1;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#000;border:none;border-radius:6px;padding:7px 10px;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;transition:all .2s;position:relative}
+.btn-dl:hover{opacity:.85}
+.btn-dl:disabled{opacity:.35;cursor:not-allowed}
+.btn-copy{background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:7px 10px;color:var(--dim);cursor:pointer;font-size:12px;transition:all .2s}
+.btn-copy:hover{border-color:var(--acc);color:var(--acc)}
+.btn-copy.copied{border-color:var(--ok);color:var(--ok)}
+.prog{display:none;padding:0 12px 10px}
+.prog.show{display:block}
+.prog-bg{background:var(--sur3);border-radius:3px;height:4px;margin-bottom:5px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:3px;width:0%;transition:width .3s}
+.prog-txt{font-family:var(--mono);font-size:8px;color:var(--dim);margin-bottom:3px}
+.prog-log{font-family:var(--mono);font-size:8px;color:var(--dim);line-height:1.6;max-height:36px;overflow:hidden}
+.footer{padding:9px 16px 13px;display:flex;align-items:center;justify-content:space-between}
+.fcount{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.fcount span{color:var(--acc);font-weight:700}
+.btn-clr{background:none;border:none;color:var(--dim);font-family:var(--mono);font-size:9px;cursor:pointer;padding:4px 8px;border-radius:5px;transition:all .2s}
+.btn-clr:hover{color:var(--err);background:rgba(255,82,82,.08)}
+.btn-export{background:none;border:1px solid var(--bdr);color:var(--acc);font-family:var(--mono);font-size:9px;cursor:pointer;padding:4px 10px;border-radius:5px;transition:all .2s;letter-spacing:.04em}
+.btn-export:hover:not(:disabled){border-color:var(--acc);background:rgba(0,229,255,.08)}
+.btn-export:disabled{opacity:.3;cursor:not-allowed}
+.mtab{padding:13px}
+.flabel{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+textarea.murl{width:100%;height:56px;background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;color:var(--txt);font-family:var(--mono);font-size:9px;padding:7px;resize:none;outline:none;line-height:1.5;transition:border .2s}
+textarea.murl:focus{border-color:var(--acc)}
+.mrow{display:flex;gap:6px;margin-top:7px}
+input.mname{flex:1;background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;padding:7px 10px;color:var(--txt);font-family:var(--mono);font-size:9px;outline:none;transition:border .2s}
+input.mname:focus{border-color:var(--acc)}
+#mProg{margin-top:10px;display:none}
+#mProg.show{display:block}
+#mPFill{height:4px;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:3px;width:0%;transition:width .3s}
+#mPBg{background:var(--sur3);border-radius:3px;height:4px;margin-bottom:5px}
+#mLog{background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:7px;font-family:var(--mono);font-size:8px;color:var(--dim);line-height:1.7;max-height:80px;overflow-y:auto;margin-top:5px}
+
+/* ═══════════════════════ YOUTUBE TAB ════════════════════════ */
+.yt-tab{padding:12px}
+.yt-info-card{display:flex;gap:10px;background:var(--sur3);border:1px solid var(--bdr);border-radius:8px;padding:10px;margin-bottom:10px}
+.yt-thumb{width:90px;height:56px;flex-shrink:0;border-radius:5px;overflow:hidden;background:#000}
+.yt-thumb img{width:100%;height:100%;object-fit:cover}
+.yt-meta{flex:1;min-width:0}
+.yt-title{font-size:11px;font-weight:600;color:var(--txt);line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.yt-author{font-family:var(--mono);font-size:8px;color:var(--dim);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yt-dur{font-family:var(--mono);font-size:8px;color:var(--acc)}
+.yt-format-toggle{display:flex;gap:4px;margin-bottom:10px}
+.yt-fmt-btn{flex:1;background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:7px 0;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--dim);cursor:pointer;transition:all .2s;text-align:center;letter-spacing:.05em}
+.yt-fmt-btn.active[data-fmt="mp4"]{background:rgba(0,229,255,.1);border-color:var(--acc);color:var(--acc)}
+.yt-fmt-btn.active[data-fmt="mp3"]{background:rgba(0,230,118,.1);border-color:var(--ok);color:var(--ok)}
+.yt-fmt-btn:hover:not(.active){border-color:var(--dim);color:var(--txt)}
+.yt-quality-list{display:flex;flex-direction:column;gap:5px}
+.yt-qrow{background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;overflow:hidden;transition:border .2s}
+.yt-qrow:hover{border-color:rgba(255,255,255,.1)}
+.yt-qrow-inner{display:flex;align-items:center;gap:8px;padding:8px 10px}
+.yt-qbadge{font-family:var(--mono);font-size:8px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.05em;white-space:nowrap;min-width:40px;text-align:center}
+.yt-qbadge.mp4{background:rgba(255,82,82,.15);color:#ff7070;border:1px solid rgba(255,82,82,.25)}
+.yt-qbadge.m4a{background:rgba(0,230,118,.1);color:var(--ok);border:1px solid rgba(0,230,118,.25)}
+.yt-qbadge.webm{background:rgba(124,77,255,.15);color:var(--acc2);border:1px solid rgba(124,77,255,.25)}
+.yt-qinfo{flex:1;min-width:0}
+.yt-qlabel{font-size:11px;font-weight:500;color:var(--txt)}
+.yt-qmeta{font-family:var(--mono);font-size:7.5px;color:var(--dim);margin-top:1px}
+.yt-qsize{font-family:var(--mono);font-size:8px;color:var(--dim);white-space:nowrap}
+.btn-yt-dl{background:linear-gradient(135deg,#c00,var(--yt));color:#fff;border:none;border-radius:5px;padding:5px 9px;font-family:var(--mono);font-size:8px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.04em}
+.btn-yt-dl:hover{opacity:.85}
+.btn-yt-dl:disabled{opacity:.35;cursor:not-allowed}
+.btn-yt-dl.done{background:var(--ok);color:#000}
+.yt-qprog{display:none;padding:4px 10px 7px;background:var(--sur2);border-top:1px solid var(--bdr)}
+.yt-qprog.show{display:block}
+.yt-qprog-bg{background:var(--bdr);border-radius:3px;height:3px;margin-bottom:4px;overflow:hidden}
+.yt-qprog-fill{height:100%;background:linear-gradient(90deg,#c00,var(--yt));border-radius:3px;width:0%;transition:width .3s}
+.yt-qprog-txt{font-family:var(--mono);font-size:7.5px;color:var(--dim)}
+.yt-loading{display:flex;align-items:center;justify-content:center;gap:8px;padding:40px 20px;color:var(--dim);font-family:var(--mono);font-size:10px}
+.yt-spinner{width:16px;height:16px;border:2px solid var(--bdr);border-top-color:var(--yt);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.yt-note{font-family:var(--mono);font-size:7.5px;color:var(--dim);text-align:center;padding:8px 0 2px;line-height:1.7}
+.yt-note strong{color:var(--warn)}
+
+/* Type tags (video+audio / solo video) */
+.yt-type-tag{font-family:var(--mono);font-size:7px;padding:1px 5px;border-radius:3px;vertical-align:middle;margin-left:4px;font-weight:700;letter-spacing:.04em}
+.yt-type-tag.audio{background:rgba(0,230,118,.1);color:var(--ok);border:1px solid rgba(0,230,118,.25)}
+.yt-type-tag.novideo{background:rgba(255,171,64,.1);color:var(--warn);border:1px solid rgba(255,171,64,.25)}
+
+/* Separador de codec (Otros formatos) */
+.yt-codec-sep{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding:8px 2px 4px;border-top:1px solid var(--bdr);margin-top:4px}
+/* ════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════ MERGE TAB ════════════════════════ */
+.merge-tab{padding:12px}
+.merge-section{margin-bottom:10px}
+.merge-title{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.merge-title span{color:var(--acc)}
+.merge-url-row{display:flex;gap:5px;align-items:center}
+.merge-url-row input{flex:1;background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:6px 8px;color:var(--txt);font-family:var(--mono);font-size:8px;outline:none;transition:border .2s}
+.merge-url-row input:focus{border-color:var(--acc)}
+.merge-url-row input.has-val{border-color:var(--ok)}
+.merge-url-row .paste-btn{background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:5px 8px;color:var(--dim);cursor:pointer;font-size:10px;flex-shrink:0;transition:all .2s}
+.merge-url-row .paste-btn:hover{border-color:var(--acc);color:var(--acc)}
+.merge-divider{display:flex;align-items:center;gap:6px;margin:6px 0;color:var(--dim);font-family:var(--mono);font-size:8px}
+.merge-divider::before,.merge-divider::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.merge-name-row{display:flex;gap:5px;margin-top:6px}
+.merge-name-row input{flex:1;background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:6px 8px;color:var(--txt);font-family:var(--mono);font-size:8px;outline:none;transition:border .2s}
+.merge-name-row input:focus{border-color:var(--acc)}
+.btn-merge{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#000;border:none;border-radius:6px;padding:7px 12px;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.04em}
+.btn-merge:hover{opacity:.85}
+.btn-merge:disabled{opacity:.35;cursor:not-allowed}
+.merge-info-box{background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;padding:8px 10px;font-family:var(--mono);font-size:8px;color:var(--dim);line-height:1.8;margin-bottom:8px}
+.merge-info-box strong{color:var(--warn)}
+.merge-prog{display:none;margin-top:8px}
+.merge-prog.show{display:block}
+.merge-prog-bg{background:var(--sur3);border-radius:3px;height:4px;margin-bottom:5px;overflow:hidden}
+.merge-prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:3px;width:0%;transition:width .3s}
+.merge-prog-txt{font-family:var(--mono);font-size:8px;color:var(--dim);margin-bottom:3px}
+.merge-log{font-family:var(--mono);font-size:8px;color:var(--dim);line-height:1.7;max-height:60px;overflow-y:auto;margin-top:4px;background:var(--sur2);border:1px solid var(--bdr);border-radius:5px;padding:5px 7px}
+
+/* ═══════════════════ CONVERT TAB ══════════════════════ */
+.conv-tab{padding:12px}
+.conv-src-box{background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;padding:9px 10px;margin-bottom:10px}
+.conv-src-lbl{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.conv-src-input{width:100%;background:transparent;border:none;color:var(--txt);font-family:var(--mono);font-size:8px;outline:none;line-height:1.5}
+.conv-or{display:flex;align-items:center;gap:6px;margin:6px 0;color:var(--dim);font-family:var(--mono);font-size:8px}
+.conv-or::before,.conv-or::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.conv-file-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--sur3);border:1px dashed var(--bdr);border-radius:7px;padding:10px;font-family:var(--mono);font-size:9px;color:var(--dim);cursor:pointer;transition:all .2s;margin-bottom:10px}
+.conv-file-btn:hover{border-color:var(--acc);color:var(--acc)}
+.conv-file-btn.has-file{border-color:var(--ok);color:var(--ok);background:rgba(0,230,118,.05)}
+.conv-formats-lbl{font-family:var(--mono);font-size:8px;color:var(--dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.conv-formats{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px}
+.conv-fmt-btn{background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:6px 8px;font-family:var(--mono);font-size:8px;color:var(--dim);cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:5px}
+.conv-fmt-btn:hover:not(.active){border-color:rgba(255,255,255,.15);color:var(--txt)}
+.conv-fmt-btn.active{background:rgba(0,229,255,.08);border-color:var(--acc);color:var(--acc)}
+.conv-fmt-btn.active[data-type="audio"]{background:rgba(0,230,118,.08);border-color:var(--ok);color:var(--ok)}
+.conv-fmt-icon{font-size:11px;flex-shrink:0}
+.conv-fmt-info{flex:1;min-width:0}
+.conv-fmt-name{font-weight:700;font-size:8px}
+.conv-fmt-desc{font-size:7px;color:var(--dim);margin-top:1px}
+.conv-name-row{display:flex;gap:5px;margin-bottom:8px}
+.conv-name-row input{flex:1;background:var(--sur3);border:1px solid var(--bdr);border-radius:6px;padding:6px 8px;color:var(--txt);font-family:var(--mono);font-size:8px;outline:none;transition:border .2s}
+.conv-name-row input:focus{border-color:var(--acc)}
+.btn-conv{background:linear-gradient(135deg,var(--ok),#00c853);color:#000;border:none;border-radius:6px;padding:7px 13px;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:all .2s;white-space:nowrap}
+.btn-conv:hover{opacity:.85}
+.btn-conv:disabled{opacity:.35;cursor:not-allowed}
+.conv-prog{display:none;margin-top:8px}
+.conv-prog.show{display:block}
+.conv-prog-bg{background:var(--sur3);border-radius:3px;height:4px;margin-bottom:5px;overflow:hidden}
+.conv-prog-fill{height:100%;background:linear-gradient(90deg,var(--ok),#00c853);border-radius:3px;width:0%;transition:width .3s}
+.conv-prog-txt{font-family:var(--mono);font-size:8px;color:var(--dim);margin-bottom:3px}
+.conv-log{font-family:var(--mono);font-size:8px;color:var(--dim);line-height:1.7;max-height:50px;overflow-y:auto;margin-top:4px;background:var(--sur2);border:1px solid var(--bdr);border-radius:5px;padding:5px 7px}
+/* ══════════════════════════════════════════════════════ */
+
+/* Botón de merge inline en tarjetas YT */
+.btn-yt-merge{background:linear-gradient(135deg,rgba(0,229,255,.15),rgba(124,77,255,.15));color:var(--acc);border:1px solid rgba(0,229,255,.3);border-radius:5px;padding:5px 9px;font-family:var(--mono);font-size:8px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.04em;margin-left:4px}
+.btn-yt-merge:hover{background:rgba(0,229,255,.2)}
+.btn-yt-merge:disabled{opacity:.35;cursor:not-allowed}
+.yt-merge-note{font-family:var(--mono);font-size:7px;color:var(--warn);padding:2px 10px 6px;background:rgba(255,171,64,.05);border-top:1px solid rgba(255,171,64,.1)}
+
+.toast{position:fixed;bottom:11px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--sur3);border:1px solid var(--bdr);border-radius:7px;padding:7px 15px;font-family:var(--mono);font-size:10px;color:var(--txt);opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:var(--ok);color:var(--ok)}
+.toast.err{border-color:var(--err);color:var(--err)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-row">
+    <div class="logo">▶</div>
+    <div><div class="appname">VIDEOSNATCH</div><div class="appsub">descarga directa · sin apps</div></div>
+    <button class="scan-btn" id="scanBtn">⟳ SCAN</button>
+  </div>
+  <div class="sbar"><div class="dot" id="dot"></div><span id="stxt">Listo</span></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="detected">DETECT.</button>
+  <button class="tab" data-tab="network">NET</button>
+  <button class="tab" data-tab="youtube">▶ YT</button>
+  <button class="tab" data-tab="merge">MERGE</button>
+  <button class="tab" data-tab="convert">CONV.</button>
+  <button class="tab" data-tab="manual">MAN.</button>
+</div>
+
+<div class="content">
+  <div class="tab-panel active" id="tab-detected">
+    <div class="empty" id="emD"><div class="ei">🎬</div><div class="et">SIN VIDEOS</div><div class="es">Pulsa SCAN para detectar<br>videos en la página actual</div></div>
+    <div id="lstD"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-network">
+    <div class="empty" id="emN"><div class="ei">📡</div><div class="et">MONITOR DE RED</div><div class="es">Dale play al video en la página.<br>Los streams aparecen aquí solos.</div></div>
+    <div id="lstN"></div>
+  </div>
+
+  <!-- ═══════════ YOUTUBE ═══════════ -->
+  <div class="tab-panel" id="tab-youtube">
+    <div class="yt-tab">
+      <div class="empty" id="yt-not-yt" style="display:none">
+        <div class="ei">▶</div>
+        <div class="et">NO ES YOUTUBE</div>
+        <div class="es">Abrí un video en YouTube.com<br>y volvé a esta pestaña.</div>
+      </div>
+      <div class="yt-loading" id="yt-loading" style="display:none">
+        <div class="yt-spinner"></div><span>Leyendo formatos...</span>
+      </div>
+      <div class="empty" id="yt-error" style="display:none">
+        <div class="ei">⚠️</div><div class="et">ERROR</div>
+        <div class="es" id="yt-error-msg">No se pudieron obtener los formatos.</div>
+      </div>
+      <div id="yt-info-card" class="yt-info-card" style="display:none">
+        <div class="yt-thumb"><img id="yt-thumb-img" src="" alt=""></div>
+        <div class="yt-meta">
+          <div class="yt-title" id="yt-video-title">—</div>
+          <div class="yt-author" id="yt-video-author">—</div>
+          <div class="yt-dur" id="yt-video-dur">—</div>
+        </div>
+      </div>
+      <div class="yt-format-toggle" id="yt-fmt-toggle" style="display:none">
+        <button class="yt-fmt-btn active" data-fmt="mp4">📹 MP4 — Video</button>
+        <button class="yt-fmt-btn" data-fmt="mp3">🎵 MP3 — Audio</button>
+      </div>
+      <div class="yt-quality-list" id="yt-quality-list"></div>
+      <div class="yt-note" id="yt-note" style="display:none">
+        <strong>▶ video + audio</strong>: stream combinado (hasta 720p).<br>
+        <strong>⚠ solo video</strong>: sin audio (1080p+). <br>
+        <strong>MP3</strong>: .m4a primero (AAC) → mejor compatibilidad.
+      </div>
+    </div>
+  </div>
+  <!-- ════════════════════════════════ -->
+
+  <!-- ═══════════ MERGE ═══════════ -->
+  <div class="tab-panel" id="tab-merge">
+    <div class="merge-tab">
+      <div class="merge-info-box">
+        <strong>¿Para qué sirve esto?</strong><br>
+        YouTube ofrece 1080p/1440p/4K solo como <em>video sin audio</em>.<br>
+        Pegá la URL del video y la URL del audio separados y los unirá en un solo archivo .mp4.
+      </div>
+      <div class="merge-section">
+        <div class="merge-title">🎬 URL del <span>video</span> (sin audio)</div>
+        <div class="merge-url-row">
+          <input type="text" id="mergeVideoUrl" placeholder="https://...  (stream de video)">
+          <button class="paste-btn" id="mergeVideoPaste" title="Pegar">📋</button>
+        </div>
+      </div>
+      <div class="merge-divider">+ audio</div>
+      <div class="merge-section">
+        <div class="merge-title">🎵 URL del <span>audio</span></div>
+        <div class="merge-url-row">
+          <input type="text" id="mergeAudioUrl" placeholder="https://...  (stream de audio m4a)">
+          <button class="paste-btn" id="mergeAudioPaste" title="Pegar">📋</button>
+        </div>
+      </div>
+      <div class="merge-name-row">
+        <input type="text" id="mergeName" placeholder="nombre-del-video">
+        <button class="btn-merge" id="mergeBtn">⚡ UNIR</button>
+      </div>
+      <div class="merge-prog" id="mergeProg">
+        <div class="merge-prog-bg"><div class="merge-prog-fill" id="mergeFill"></div></div>
+        <div class="merge-prog-txt" id="mergeTxt">Preparando...</div>
+        <div class="merge-log" id="mergeLog"></div>
+      </div>
+    </div>
+  </div>
+  <!-- ════════════════════════════════ -->
+
+  <!-- ═══════════ CONVERT ═══════════ -->
+  <div class="tab-panel" id="tab-convert">
+    <div class="conv-tab">
+      <div class="conv-src-box">
+        <div class="conv-src-lbl">URL del archivo fuente</div>
+        <input class="conv-src-input" id="convUrl" placeholder="https://...  (video o audio)">
+      </div>
+      <div class="conv-or">o subí un archivo local</div>
+      <label class="conv-file-btn" id="convFileLbl">
+        <input type="file" id="convFile" accept="video/*,audio/*" style="display:none">
+        <span id="convFileIcon">📂</span>
+        <span id="convFileName">Elegir archivo de video/audio</span>
+      </label>
+      <div class="conv-formats-lbl">Formato de salida</div>
+      <div class="conv-formats" id="convFormats">
+        <button class="conv-fmt-btn active" data-fmt="mp4" data-type="video">
+          <span class="conv-fmt-icon">🎬</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">MP4</div><div class="conv-fmt-desc">Video universal</div></div>
+        </button>
+        <button class="conv-fmt-btn" data-fmt="webm" data-type="video">
+          <span class="conv-fmt-icon">🌐</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">WebM</div><div class="conv-fmt-desc">Web optimizado</div></div>
+        </button>
+        <button class="conv-fmt-btn" data-fmt="mp3" data-type="audio">
+          <span class="conv-fmt-icon">🎵</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">MP3</div><div class="conv-fmt-desc">Audio universal</div></div>
+        </button>
+        <button class="conv-fmt-btn" data-fmt="m4a" data-type="audio">
+          <span class="conv-fmt-icon">🎶</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">M4A</div><div class="conv-fmt-desc">AAC mejor calidad</div></div>
+        </button>
+        <button class="conv-fmt-btn" data-fmt="wav" data-type="audio">
+          <span class="conv-fmt-icon">📻</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">WAV</div><div class="conv-fmt-desc">Sin pérdida</div></div>
+        </button>
+        <button class="conv-fmt-btn" data-fmt="ogg" data-type="audio">
+          <span class="conv-fmt-icon">🔊</span>
+          <div class="conv-fmt-info"><div class="conv-fmt-name">OGG</div><div class="conv-fmt-desc">Audio libre</div></div>
+        </button>
+      </div>
+      <div class="conv-name-row">
+        <input type="text" id="convName" placeholder="nombre-de-salida">
+        <button class="btn-conv" id="convBtn">🔄 CONVERTIR</button>
+      </div>
+      <div class="conv-prog" id="convProg">
+        <div class="conv-prog-bg"><div class="conv-prog-fill" id="convFill"></div></div>
+        <div class="conv-prog-txt" id="convTxt">Preparando...</div>
+        <div class="conv-log" id="convLog"></div>
+      </div>
+    </div>
+  </div>
+  <!-- ════════════════════════════════ -->
+
+  <div class="tab-panel" id="tab-manual">
+    <div class="mtab">
+      <div class="flabel">URL del video o stream</div>
+      <textarea class="murl" id="mUrl" placeholder="https://...video.mp4  ó  https://...playlist.m3u8"></textarea>
+      <div class="mrow">
+        <input class="mname" id="mName" placeholder="nombre-video.mp4"/>
+        <button class="btn-dl" id="mDl" style="flex:0;padding:7px 13px">↓ DL</button>
+      </div>
+      <div id="mProg"><div id="mPBg"><div id="mPFill"></div></div><div id="mLog"></div></div>
+    </div>
+    <div class="mtab" style="margin-top:8px;border-top:1px solid #333;padding-top:10px;">
+      <div class="flabel" style="display:flex;align-items:center;justify-content:space-between;">
+        <span>🔬 Diagnostico YouTube</span>
+        <button id="diagBtn" style="font-size:11px;padding:4px 10px;border-radius:5px;border:1px solid #00e5ff;background:transparent;color:#00e5ff;cursor:pointer;">Analizar</button>
+      </div>
+      <pre id="diagOut" style="font-size:10px;line-height:1.5;color:#aaa;background:rgba(0,0,0,.3);border-radius:6px;padding:8px;margin-top:6px;max-height:220px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;display:none;"></pre>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="fcount">Encontrados: <span id="tot">0</span></div>
+  <button class="btn-clr" id="clrBtn">✕ Limpiar</button>
+      <button class="btn-export" id="exportBtn" disabled title="Exportar datos como JSON">⬇ JSON</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="hls-downloader.js"></script>
+<script src="youtube-helper.js"></script>
+<script src="merge-convert.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

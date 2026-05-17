@@ -1,0 +1,91 @@
+{
+    "469 V2": {
+        "9": {
+            "offset_x": 0,
+            "offset_y": 0
+        },
+        "auto_config_enabled": true,
+        "auto_selection": {
+            "first": "color.png",
+            "middle": "gris.png",
+            "last": "doble color.png"
+        },
+        "8": {
+            "offset_x": -7,
+            "offset_y": 0
+        },
+        "5": {
+            "offset_x": -7,
+            "offset_y": -5
+        },
+        "2": {
+            "offset_x": -7,
+            "offset_y": 0
+        },
+        "post_process_first": false,
+        "post_process_last": false
+    },
+    "469": {
+        "3": {
+            "offset_x": 31,
+            "offset_y": 18
+        },
+        "auto_config_enabled": true,
+        "auto_selection": {
+            "first": "color.png",
+            "middle": "gris.png",
+            "last": "doble color.png"
+        },
+        "9": {
+            "offset_x": 31,
+            "offset_y": 24
+        },
+        "1": {
+            "offset_x": 45,
+            "offset_y": 18
+        },
+        "8": {
+            "offset_x": 0,
+            "offset_y": 24
+        },
+        "7": {
+            "offset_x": 45,
+            "offset_y": 24
+        },
+        "5": {
+            "offset_x": 0,
+            "offset_y": -2
+        },
+        "2": {
+            "offset_x": 0,
+            "offset_y": 18
+        }
+    },
+    "450 colamanga": {
+        "auto_selection": {},
+        "auto_config_enabled": true,
+        "3": {
+            "offset_x": 0,
+            "offset_y": 0
+        }
+    },
+    "468": {
+        "auto_selection": {
+            "first": "color.png",
+            "middle": "gris.png",
+            "last": "color.png"
+        },
+        "auto_config_enabled": false
+    },
+    "468 V2": {
+        "auto_selection": {},
+        "auto_config_enabled": false
+    },
+    "465": {
+        "auto_selection": {},
+        "auto_config_enabled": false
+    },
+    "colamanga": {
+        "auto_config_enabled": false
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "costs": {
+    "cargar_imagen_local": 1,
+    "importar_drive": 1,
+    "ocr_imagen": 1,
+    "deteccion_auto": 0,
+    "limpiar_imagen": 2,
+    "upscale_hd": 1,
+    "upscale_ultra": 1,
+    "traducir_100_chars": 1,
+    "exportar_json": 0,
+    "exportar_imagenes": 0
+  },
+  "default_credits": {
+    "FULL": 500,
+    "STAFF": 300
+  },
+  "upscaler_names": {
+    "waifu2x": "Calidad HD",
+    "realesrgan": "Calidad Ultra"
+  }
+}

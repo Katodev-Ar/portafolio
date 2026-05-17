@@ -1,0 +1,48 @@
+# ============================================================================
+# PrintBridge v5.0.3 — requirements.lock
+# ============================================================================
+#
+# ESTADO: pendiente de generación en entorno Windows/Python 3.11+
+#
+# Este archivo debe ser generado ejecutando generate_lock.bat en el equipo
+# de desarrollo Windows con Python 3.11+ y pywin32 instalado.
+# Ver instrucciones completas en generate_lock.bat
+#
+# ¿POR QUÉ NO SE PUEDE GENERAR EN LINUX/CI GENÉRICO?
+#   pip-compile resuelve hashes descargando los wheels reales desde PyPI.
+#   pywin32, PyMuPDF y pystray tienen wheels específicos de Windows.
+#   Un lock generado en Linux produciría hashes incompatibles para esos
+#   paquetes y fallaría con: "THESE PACKAGES DO NOT MATCH THE HASHES"
+#
+# CÓMO GENERAR (una sola vez en el equipo Windows de desarrollo):
+#
+#   1. Abrir PowerShell o cmd en la carpeta del proyecto
+#   2. Ejecutar:
+#        generate_lock.bat
+#
+#   O manualmente:
+#        pip install pip-tools
+#        pip-compile requirements.txt --generate-hashes --output-file requirements.lock
+#        pytest tests/ -v
+#        git add requirements.lock
+#        git commit -m "chore: generate requirements.lock with real hashes"
+#
+# CÓMO USAR EN CI/CD (una vez generado):
+#   pip install --require-hashes -r requirements.lock
+#
+# CÓMO ACTUALIZAR MENSUALMENTE:
+#   pip-compile --upgrade requirements.txt --generate-hashes --output-file requirements.lock
+#   pytest tests/ -v
+#
+# ============================================================================
+#
+# Ejemplo del formato que tendrá este archivo tras la generación:
+#
+# fastapi==0.115.5 \
+#     --hash=sha256:1234abcd... \   <- hash del wheel Windows
+#     --hash=sha256:5678efgh...     <- hash del sdist
+#
+# pywin32==308 \
+#     --hash=sha256:abcd1234...     <- wheel cp311-win_amd64
+#
+# ============================================================================

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0b10">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="manifest" href="/manifest.json">
+<title>Serenity — PC Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0b10;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--accent:#00e5ff;--red:#ff3d5a;--green:#00e676;--orange:#ff9100;--purple:#b388ff;--text:#e0e0e0;--dim:rgba(255,255,255,.45)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;padding:16px 16px 100px;-webkit-font-smoothing:antialiased}
+.hdr{text-align:center;padding:18px 0 12px}
+.hdr h1{font-size:1.15rem;font-weight:700;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr .sub{font-size:.7rem;color:var(--dim);margin-top:2px;letter-spacing:1px}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;animation:pulse 2s infinite}
+.online{background:var(--green);box-shadow:0 0 8px var(--green)}
+.offline{background:var(--red);box-shadow:0 0 8px var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;backdrop-filter:blur(12px)}
+.card-title{font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:12px;font-weight:600}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stat{text-align:center}
+.stat-val{font-size:1.6rem;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btn{padding:14px 8px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'Inter',sans-serif;font-weight:600;font-size:.75rem;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px;-webkit-tap-highlight-color:transparent;user-select:none}
+.btn:active{transform:scale(.94);border-color:var(--accent);background:rgba(0,229,255,.08)}
+.btn .ico{font-size:1.4rem}
+.btn-power{border-color:rgba(0,230,118,.2);background:rgba(0,230,118,.06)}
+.btn-power:active{background:rgba(0,230,118,.2);border-color:var(--green)}
+.btn-off{border-color:rgba(255,61,90,.2);background:rgba(255,61,90,.06)}
+.btn-off:active{background:rgba(255,61,90,.2);border-color:var(--red)}
+.btn-shortcuts{border-color:rgba(255,145,0,.2);background:rgba(255,145,0,.06)}
+.btn-shortcuts:active{background:rgba(255,145,0,.2);border-color:var(--orange)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.ai-section{margin-top:2px}
+.ai-row{display:flex;gap:8px}
+.ai-input{flex:1;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:#fff;font-family:'Inter',sans-serif;font-size:.8rem;outline:none;transition:border .2s}
+.ai-input:focus{border-color:var(--accent)}
+.ai-btn-icon{padding:12px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ai-send{padding:12px 18px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--accent),var(--purple));color:#000;font-weight:700;font-size:.8rem;cursor:pointer;transition:opacity .2s;-webkit-tap-highlight-color:transparent}
+.ai-send:active{opacity:.7}
+.clipboard-box{width:100%;height:60px;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:#fff;font-family:monospace;font-size:.75rem;resize:none;margin-bottom:8px}
+.ai-log{margin-top:10px;max-height:45vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.msg{padding:10px 14px;border-radius:12px;font-size:.78rem;line-height:1.45;max-width:92%;word-wrap:break-word;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg-user{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.15);align-self:flex-end;text-align:right}
+.msg-ai{background:rgba(179,136,255,.08);border:1px solid rgba(179,136,255,.12);align-self:flex-start;border-left:3px solid var(--purple)}
+.msg-sys{background:rgba(255,145,0,.08);border:1px solid rgba(255,145,0,.12);align-self:center;text-align:center;font-size:.7rem;color:var(--orange)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--dim);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.typing{padding:10px 14px;align-self:flex-start;font-size:.75rem;color:var(--dim)}
+
+/* Toast Notifications */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#000;padding:10px 20px;border-radius:20px;font-size:.8rem;font-weight:600;opacity:0;transition:all .3s ease;z-index:1000;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Landscape Mode */
+@media (orientation: landscape) {
+  body { padding: 10px; }
+  .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .ai-log { max-height: 55vh; }
+}
+
+/* Modals */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto}
+.close-btn{float:right;cursor:pointer;font-size:1.5rem;color:var(--dim)}
+.proc-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border);align-items:center;font-size:0.8rem}
+.proc-kill{background:var(--red);border:none;border-radius:8px;color:#fff;padding:5px 10px;cursor:pointer;font-size:0.7rem}
+.vol-slider{width:100%;margin:10px 0;accent-color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="hdr">
+  <h1>SERENITY</h1>
+  <div class="sub"><span id="dot" class="status-dot offline"></span><span id="pc-status">Verificando...</span></div>
+</div>
+
+<div class="grid-container">
+<div class="col-left">
+
+<div class="card">
+  <div class="card-title">Sistema</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="s-cpu">--</div><div class="stat-lbl">CPU %</div></div>
+    <div class="stat"><div class="stat-val" id="s-ram">--</div><div class="stat-lbl">RAM %</div></div>
+    <div class="stat"><div class="stat-val" id="s-disk">--</div><div class="stat-lbl">Disco %</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Controles Rapidos</div>
+  <div class="actions">
+    <button class="btn btn-power" data-when="off" onclick="doAction('wol')"><span class="ico">&#9889;</span>Encender</button>
+    <button class="btn btn-off" data-when="on" onclick="doAction('shutdown')"><span class="ico">&#9211;</span>Apagar</button>
+    <button class="btn" data-when="on" onclick="doAction('lock')"><span class="ico">&#128274;</span>Bloquear</button>
+    <button class="btn" data-when="locked" onclick="doAction('unlock')" style="border-color:rgba(0,229,255,.2);background:rgba(0,229,255,.06)"><span class="ico">&#128275;</span>Desbloquear</button>
+    <button class="btn" data-when="on" onclick="doAction('minimize_all')"><span class="ico">&#128377;</span>Minimizar</button>
+    <button class="btn" data-when="on" onclick="doAction('volume_mute')"><span class="ico">&#128263;</span>Silenciar</button>
+    <button class="btn" data-when="on" onclick="showScreen()"><span class="ico">&#128250;</span>Pantalla</button>
+    <button class="btn" data-when="on" onclick="showProcs()"><span class="ico">&#128187;</span>Procesos</button>
+    <button class="btn btn-shortcuts" data-when="on" onclick="$('modal-shortcuts').style.display='flex'"><span class="ico">&#9881;</span>Más</button>
+  </div>
+  
+  <div style="margin-top:15px; display:flex; align-items:center; gap:10px;" data-when="on">
+    <span class="ico">&#128266;</span>
+    <input type="range" id="vol-ctrl" class="vol-slider" min="0" max="100" value="50" onchange="setVolume(this.value)">
+  </div>
+</div>
+
+</div><!-- End col-left -->
+<div class="col-right">
+
+<div class="card ai-section">
+  <div class="card-title">Serenity AI</div>
+  <div class="ai-row">
+    <input type="file" id="file-upload" style="display:none" onchange="uploadFile()">
+    <button class="ai-btn-icon" onclick="$('file-upload').click()" title="Subir archivo"><span class="ico">&#128206;</span></button>
+    <button class="ai-btn-icon" id="mic-btn" onclick="toggleMic()" title="Hablar"><span class="ico">&#127897;</span></button>
+    <input class="ai-input" id="ai-in" placeholder="Habla con Serenity..." autocomplete="off">
+    <button class="ai-send" id="ai-btn" onclick="sendAI()">Enviar</button>
+  </div>
+  <div class="ai-log" id="ai-log"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Portapapeles Universal</div>
+  <textarea id="clip-text" class="clipboard-box" placeholder="Texto copiado de la PC..."></textarea>
+  <div class="actions" style="grid-template-columns:1fr 1fr;">
+    <button class="btn" onclick="readClip()"><span class="ico">&#128229;</span>Leer de PC</button>
+    <button class="btn" onclick="writeClip()"><span class="ico">&#128228;</span>Copiar a PC</button>
+  </div>
+</div>
+</div><!-- End col-right -->
+</div><!-- End grid-container -->
+
+<!-- Modals -->
+<div id="modal-screen" class="modal" onclick="this.style.display='none'">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-btn" onclick="$('modal-screen').style.display='none'">&times;</span>
+    <h3 style="margin-top:0; color:#fff">Visor de Pantalla</h3>
+    <img id="screen-img" style="width:100%; border-radius:8px; margin-top:10px" src="" alt="Cargando...">
+    <button class="btn" style="width:100%; margin-top:10px" onclick="loadScreen()">Actualizar</button>
+  </div>
+</div>
+
+<div id="modal-procs" class="modal" onclick="this.style.display='none'">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-btn" onclick="$('modal-procs').style.display='none'">&times;</span>
+    <h3 style="margin-top:0; color:#fff">Top Procesos</h3>
+    <div id="procs-list">Cargando...</div>
+  </div>
+</div>
+
+<div id="modal-shortcuts" class="modal" onclick="this.style.display='none'">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-btn" onclick="$('modal-shortcuts').style.display='none'">&times;</span>
+    <h3 style="margin-top:0; color:#fff">Atajos Rápidos</h3>
+    <div class="modal-grid">
+      <button class="btn" onclick="doAction('shell', '(New-Object -ComObject Shell.Application).MinimizeAll()');$('modal-shortcuts').style.display='none'"><span class="ico">&#128377;</span>Minimizar Todo</button>
+      <button class="btn" onclick="doAction('shell', 'rundll32.exe user32.dll,LockWorkStation');$('modal-shortcuts').style.display='none'"><span class="ico">&#128274;</span>Bloquear PC</button>
+      <button class="btn" onclick="doAction('shell', 'Start-Process snippingtool');$('modal-shortcuts').style.display='none'"><span class="ico">&#9986;</span>Recortes</button>
+      <button class="btn" onclick="doAction('sleep');$('modal-shortcuts').style.display='none'"><span class="ico">&#127769;</span>Suspender</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_URL = "https://serenity-pc-link-default-rtdb.firebaseio.com";
+let BASE = ""; // Se llenará dinámicamente desde Firebase
+
+let PIN = localStorage.getItem('serenity_pin');
+if(!PIN) {
+  PIN = prompt("Serenity PC Agent\\nIntroduce el PIN de seguridad:");
+  if(PIN) localStorage.setItem('serenity_pin', PIN);
+}
+
+const originalFetch = window.fetch;
+window.fetch = async function() {
+  let [resource, config] = arguments;
+  if(!config) config = {};
+  if(!config.headers) config.headers = {};
+  
+  if(typeof resource === 'string' && !resource.startsWith(FIREBASE_URL)) {
+    // Append PIN as query param (ngrok strips custom headers)
+    const sep = resource.includes('?') ? '&' : '?';
+    resource = resource + sep + 'pin=' + PIN;
+    config.headers["ngrok-skip-browser-warning"] = "69420";
+  }
+  
+  const res = await originalFetch(resource, config);
+  if(res.status === 401 && typeof resource === 'string' && !resource.startsWith(FIREBASE_URL)) {
+    localStorage.removeItem('serenity_pin');
+    alert("PIN Incorrecto o expirado.");
+    location.reload();
+  }
+  return res;
+};
+
+let busy=false;
+
+function $(id){return document.getElementById(id)}
+
+function showToast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+function addMsg(text,type){
+  if(type==="sys"){
+    showToast(text);
+    return;
+  }
+  const d=document.createElement("div");
+  d.className="msg msg-"+type;
+  if(type==="ai"){
+    d.innerHTML = text.replace(/\n/g, '<br>') + ` <span style="cursor:pointer;opacity:0.5" title="Reportar error" onclick="reportMsg(this.parentNode.innerText)">🚩</span>`;
+  } else {
+    d.textContent=text;
+  }
+  $("ai-log").appendChild(d);
+  $("ai-log").scrollTop=$("ai-log").scrollHeight;
+}
+
+async function reportMsg(msgText) {
+  try {
+    await fetch(BASE+"/report", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({msg: msgText})});
+    showToast("Reporte guardado en log");
+  } catch(e) {}
+}
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+if(SpeechRecognition){
+  rec = new SpeechRecognition();
+  rec.lang = 'es-ES';
+  rec.interimResults = false;
+  rec.onresult = function(e) {
+    $("ai-in").value = e.results[0][0].transcript;
+    $("mic-btn").style.background = "";
+    sendAI();
+  };
+  rec.onerror = function() { $("mic-btn").style.background = ""; }
+  rec.onend = function() { $("mic-btn").style.background = ""; }
+}
+
+function toggleMic(){
+  if(!rec) { showToast("Tu navegador no soporta voz"); return; }
+  $("mic-btn").style.background = "var(--red)";
+  rec.start();
+}
+
+function removeTyping(){
+  const t=$("ai-log").querySelector(".typing");
+  if(t)t.remove();
+}
+
+function showTyping(){
+  const d=document.createElement("div");
+  d.className="typing";
+  d.innerHTML='<span class="spinner"></span> Serenity esta pensando...';
+  $("ai-log").appendChild(d);
+  $("ai-log").scrollTop=$("ai-log").scrollHeight;
+}
+
+async function doAction(a, param=null){
+  if(a==="shutdown"&&!confirm("\\u00bfSeguro que quieres APAGAR la PC?"))return;
+  addMsg("Ejecutando...","sys");
+  
+  // Si la acción es encender, usar Firebase para avisar al ESP32
+  if(a === "wol") {
+    try {
+      await window.fetch(FIREBASE_URL + "/server.json", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "encender" })
+      });
+      addMsg("Comando enviado al ESP32 por Firebase. Despertando PC...","sys");
+    } catch(e) { addMsg("Error al contactar Firebase","sys"); }
+    return;
+  }
+  
+  try{
+    if(!BASE) throw new Error("PC offline");
+    const body = {action:a};
+    if(param) body.params = param;
+    const r=await fetch(BASE+"/control",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const d=await r.json();
+    addMsg(d.result,"sys");
+  }catch(e){addMsg("PC no responde. \\u00bfEsta encendida?","sys")}
+  setTimeout(refreshStats,2000);
+}
+
+async function sendAI(){
+  if(busy)return;
+  const inp=$("ai-in");
+  const q=inp.value.trim();
+  if(!q)return;
+  inp.value="";
+  addMsg(q,"user");
+  busy=true;
+  $("ai-btn").innerHTML='<span class="spinner"></span>';
+  showTyping();
+  try{
+    const r=await fetch(BASE+"/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:q})});
+    removeTyping();
+    const d=await r.json();
+    addMsg(d.response||d.error||"Sin respuesta","ai");
+    if(d.exec_result)addMsg("\u2192 "+d.exec_result,"sys");
+  }catch(e){removeTyping();addMsg("Error de conexion","ai")}
+  busy=false;
+  $("ai-btn").textContent="Enviar";
+  refreshStats();
+}
+
+async function uploadFile(){
+  const f=$("file-upload").files[0];
+  if(!f)return;
+  addMsg("Subiendo "+f.name+"...","sys");
+  const fd=new FormData();
+  fd.append("file",f);
+  try{
+    const r=await fetch(BASE+"/upload",{method:"POST",body:fd});
+    const d=await r.json();
+    if(d.success){
+      addMsg("Archivo guardado en el buzón.","sys");
+      $("ai-in").value = "Analiza el archivo " + f.name + " que acabo de subir al buzón.";
+    }else{
+      addMsg("Error al subir archivo.","sys");
+    }
+  }catch(e){addMsg("Fallo en la subida.","sys")}
+  $("file-upload").value="";
+}
+
+async function readClip(){
+  try{
+    const r=await window.fetch(FIREBASE_URL + "/clipboard/pc.json");
+    const d=await r.json();
+    $("clip-text").value=d||"";
+  }catch(e){console.error(e)}
+}
+
+async function syncClipboard() {
+  // 1. PC -> Mobile (Leer lo que la PC copió)
+  try {
+    const r = await window.fetch(FIREBASE_URL + "/clipboard/pc.json");
+    const txt = await r.json();
+    if(txt && txt !== $("clip-text").value && document.activeElement !== $("clip-text")) {
+      $("clip-text").value = txt;
+    }
+  } catch(e) {}
+}
+
+async function writeClip(){
+  const txt=$("clip-text").value;
+  try{
+    // Escribir en Firebase para que la PC lo recoja
+    await window.fetch(FIREBASE_URL + "/clipboard/mobile.json", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(txt)
+    });
+    showToast("Enviado al portapapeles de la PC");
+  }catch(e){console.error(e)}
+}
+
+function showScreen() {
+  $("modal-screen").style.display = "flex";
+  loadScreen();
+}
+
+async function loadScreen() {
+  $("screen-img").alt = "Cargando...";
+  try {
+    const r = await fetch(BASE + "/screenshot?t=" + new Date().getTime());
+    const blob = await r.blob();
+    $("screen-img").src = URL.createObjectURL(blob);
+  } catch(e) { $("screen-img").alt = "Error al cargar"; }
+}
+
+async function showProcs() {
+  $("modal-procs").style.display = "flex";
+  $("procs-list").innerHTML = "Cargando...";
+  try {
+    const r = await fetch(BASE+"/control",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"processes"})});
+    const d = await r.json();
+    const procs = JSON.parse(d.result);
+    let html = "";
+    procs.forEach(p => {
+      html += `<div class="proc-item">
+                 <span style="color:#fff;font-weight:bold">${p.name}</span>
+                 <span style="color:var(--dim)">${p.cpu_percent.toFixed(1)}% CPU | ${(p.memory_percent||0).toFixed(1)}% RAM</span>
+                 <button class="proc-kill" onclick="killProc('${p.name}')">Kill</button>
+               </div>`;
+    });
+    $("procs-list").innerHTML = html;
+  } catch(e) { $("procs-list").innerHTML = "Error"; }
+}
+
+async function killProc(name) {
+  if(!confirm("Matar proceso " + name + "?")) return;
+  try {
+    await fetch(BASE+"/process/kill",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name})});
+    showToast("Proceso terminado");
+    showProcs();
+  } catch(e) {}
+}
+
+async function setVolume(val) {
+  try {
+    await fetch(BASE+"/volume",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({level:val})});
+  } catch(e) {}
+}
+
+$("ai-in").addEventListener("keydown",e=>{if(e.key==="Enter")sendAI()});
+
+async function refreshStats(){
+  try{
+    // 1. Obtener la URL de ngrok de la PC desde Firebase
+    const f_res = await window.fetch(FIREBASE_URL + "/server.json");
+    const fb = await f_res.json();
+    
+    if(fb && fb.status === "online" && fb.pc_url) {
+        BASE = fb.pc_url;
+        // 2. Comunicarse directamente con el Agente de Python
+        const r=await fetch(BASE+"/status",{signal:AbortSignal.timeout(4000)});
+        const d=await r.json();
+        const lk=d.locked;
+        $("dot").className="status-dot online";
+        $("pc-status").textContent=lk?"Bloqueada | "+d.os:"Online | "+d.os;
+        $("s-cpu").textContent=d.cpu;
+        $("s-ram").textContent=d.ram;
+        $("s-disk").textContent=d.disk;
+        // Toggle buttons by state
+        document.querySelectorAll('[data-when]').forEach(b=>{
+          const w=b.dataset.when;
+          b.style.display=(w==="on"&&!lk)||(w==="locked"&&lk)||(w==="always")?"flex":"none";
+        });
+    } else {
+        throw new Error("PC Offline en Firebase");
+    }
+  }catch(e){
+    BASE = ""; // Reset base
+    $("dot").className="status-dot offline";
+    $("pc-status").textContent="PC Offline (ESP32 Standby)";
+    $("s-cpu").textContent="--";
+    $("s-ram").textContent="--";
+    $("s-disk").textContent="--";
+    
+    document.querySelectorAll('[data-when]').forEach(b=>{
+      b.style.display=b.dataset.when==="off"?"flex":"none";
+    });
+  }
+}
+
+setInterval(refreshStats,5000);
+refreshStats();
+</script>
+</body>
+</html>
