@@ -2,12 +2,13 @@
 
 Servidor de impresión para compartir tu impresora USB con todos los dispositivos de tu red.
 
-## ¿Cómo funciona?
+## 💡 Motivación de Ingeniería & Arquitectura
+Este proyecto nació para solucionar una limitación de hardware real: **una impresora doméstica de alta fidelidad pero sin conexión Wi-Fi (solo conexión USB)**. 
 
-Tu PC con la impresora corre esta app. Cualquier celular, tablet u otra computadora en tu WiFi puede imprimir desde el navegador sin instalar nada.
+En lugar de adquirir hardware servidor propietario costoso, se diseñó y programó **PrintBridge**: un servidor de impresión local ligero y seguro que transforma la computadora local en un **Hub Central de Impresión**. Cualquier dispositivo en la red WiFi local (celulares, tablets, laptops) puede enviar tareas de impresión de manera concurrente y segura mediante una cola de impresión asíncrona gestionada a nivel de software.
 
 ```
-[Celular / Otra PC]  ──WiFi──►  [PrintBridge en tu PC]  ──USB──►  [Impresora]
+[Celular / Otra PC]  ──WiFi (FastAPI Web Interface)──►  [PrintBridge en tu PC]  ──USB (Windows Spooler)──►  [Impresora USB]
 ```
 
 ---
