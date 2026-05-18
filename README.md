@@ -26,8 +26,10 @@ Mi especialidad es tomar un problema complejo (procesar imágenes, coordinar col
 |----------|-------------|------|
 | [**BloomStitch**](./automation-ai/BloomStitch) | Pipeline de procesamiento masivo de imágenes. Automatiza el corte, pegado y optimización WebP de manga. **+15 versiones, 1,000+ imágenes/mes procesadas.** | Python, Pillow |
 | [**BloomTranslator**](./automation-ai/BloomTranslator) | Sistema de traducción automática integrado con modelos de IA. | Python, LLM APIs |
-| [**CorrectorTraducciones**](./automation-ai/CorrectorTraducciones) | Corrector automático de textos traducidos, compilado como ejecutable standalone. | Python |
+| [**CorrectorTraducciones**](./automation-ai/CorrectorTraducciones) | Corrector de textos traducidos. Incluye un **inyector de nodos XML OpenXML** para superar las limitaciones de `python-docx` y formatear estadísticas OCR. | Python, python-docx |
 | [**GeminiMangaSummary**](./automation-ai/GeminiMangaSummary) | Generador de resúmenes de contenido manga utilizando la API de Google Gemini. | Python, Gemini API |
+| [**bloom-media-migration**](./automation-ai/bloom-media-migration) | Pipeline de migración masiva: transcodificador WebP Lossless (esfuerzo 6) con verificación geométrica y autogeneración de sentencias SQL WP-CLI search-replace. | Python, PIL, CLI |
+
 
 ### 🤖 Bots e IoT
 
@@ -48,6 +50,10 @@ Mi especialidad es tomar un problema complejo (procesar imágenes, coordinar col
 | [**bloom-recaptcha-login**](./wordpress-plugins/bloom-recaptcha-login) | Protección anti-bot con Google reCAPTCHA. | PHP |
 | [**bloom-user-profiles**](./wordpress-plugins/bloom-user-profiles) | Sistema completo de perfiles de usuario con avatares y estadísticas. | PHP, CSS, JS |
 | [**bloom-reader-image-guard**](./wordpress-plugins/bloom-reader-image-guard) | Protección anti-descarga de imágenes del lector. | PHP, JS |
+| [**bloom-reader-anchored-comments**](./wordpress-plugins/bloom-reader-anchored-comments) | Comentarios manga anclados al estilo Medium/Figma. Soporta BBCode de formato, WebP resizing en caliente y automoderación por reportes acumulados. | PHP, JS, CSS |
+| [**bloom-security-hardening**](./wordpress-plugins/bloom-security-hardening) | Escudo anti-hackers: fingerprinting rate-limiting, honeypot decoy, firmas criptográficas, y bloqueador en caliente de scripts Monetag en hooks nativos. | PHP, CSS, JS |
+| [**bloom-internal-raw-image-exception**](./wordpress-plugins/bloom-internal-raw-image-exception) | Proxy interno seguro para streaming de imágenes crudas con prevención activa de directory traversal. | PHP |
+
 
 ### 🖥️ Herramientas de Escritorio
 

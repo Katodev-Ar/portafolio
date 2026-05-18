@@ -31,6 +31,15 @@ Sistema completo de perfiles de usuario con avatares personalizados, estadístic
 ### 🖼️ bloom-reader-image-guard
 Protección anti-descarga de imágenes del lector de manga, implementando técnicas de ofuscación del DOM.
 
+### 💬 bloom-reader-anchored-comments
+Sistema de comentarios manga anclados al estilo Medium/Figma. Soporta BBCode de formato, transcodificación WebP en caliente a 60% de calidad al subir imágenes, y auto-moderación en cola de hold al acumular 3 reportes únicos.
+
+### 🛡️ bloom-security-hardening
+Escudo anti-hackers completo: rate-limiting por hash md5 de fingerprint IP+UA, honeypot decoy, firma criptográfica matemática validada con `wp_hash`, bloqueo de enumeración de usuarios REST API, y un supresor que intercepta hooks nativos de WordPress para desactivar anuncios Monetag en caliente en páginas de autenticación.
+
+### 🔏 bloom-internal-raw-image-exception
+Proxy de streaming seguro con prevención activa de directory traversal comparando rutas contra la uploads base canónica, permitiendo a los colaboradores del panel administrativo ver imágenes protegidas con cero retardo.
+
 ## Tecnologías
 - PHP 7.4+
 - WordPress Hooks & Actions API
