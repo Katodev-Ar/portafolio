@@ -78,7 +78,8 @@ Mi especialidad es tomar un problema complejo (procesar imágenes, coordinar col
 - 👥 **30 miembros de staff & 4 coordinadores** gestionados en tiempo real por SerenityBot
 - 💰 **Sistemas listos para producción** (Bloom Coins MP/PayPal)
 - 🌐 **Plataforma real en producción** en bloomscans.com
-- 📦 **17 proyectos de software** desarrollados y mantenidos
+- 🛡️ **11 plugins WordPress custom** en producción simultánea
+- 📦 **22 proyectos de software** desarrollados y mantenidos
 
 ---
 

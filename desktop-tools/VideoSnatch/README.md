@@ -1,26 +1,16 @@
-# 📺 VideoSnatch
+# 📥 VideoSnatch
 
-**Descargador de videos multiplataforma — Extensión de navegador + App de escritorio**
+**Descargador de videos multiplataforma con extensión de navegador e interfaz de escritorio.**
 
-## ¿Qué hace?
-VideoSnatch es una herramienta que permite descargar videos de múltiples plataformas web. Comenzó como una extensión de navegador simple y evolucionó durante **15+ versiones** hasta convertirse en una aplicación completa con soporte para YouTube y otras plataformas.
+## 📋 Descripción
+Herramienta que permite descargar videos de múltiples plataformas web. Combina una extensión de navegador para interceptar y detectar URLs de video con una aplicación de escritorio para gestionar las descargas. Desarrollada a lo largo de 15+ versiones.
 
-## Evolución del proyecto
-- **v1-v3**: Extensión básica de navegador
-- **v4-v6**: Integración con YouTube y procesamiento de video
-- **v7.0-v7.1.1**: Versión estable con interfaz mejorada y múltiples formatos
+## 🚀 Características
+- Extensión de navegador para detección automática de URLs de video
+- Aplicación de escritorio para gestión de colas de descarga
+- Soporte para múltiples resoluciones y formatos
+- Historial de descargas y reanudación de descargas incompletas
 
-## Tecnologías
-- Python 3
-- JavaScript (extensión de navegador)
-- FFmpeg (procesamiento de video)
-- API de plataformas de video
-
-## Estructura
-```
-VideoSnatch/
-├── extension/         # Código de la extensión de navegador
-├── app/              # Aplicación de escritorio
-├── manifest.json     # Configuración de la extensión
-└── requirements.txt  # Dependencias Python
-```
+## 💻 Tecnologías
+- Python 3, JavaScript
+- Browser Extension API, yt-dlp
